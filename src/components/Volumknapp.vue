@@ -4,14 +4,23 @@ import {ref, onMounted, watch} from "vue";
 let audio = new Audio('axelf.m4a')
 	audio.volume = 1.0;
 	audio.loop = true;
-	const isOpen = ref(false);
+
+const isOpen = ref(false);
 
 const volume = ref(audio.volume)
 const activeButtonIndex = ref(0);
 const counter = ref(0)
 const message = ref(null);
 
-const phrases = ref(["Ding,ding,ding,ding,dong", "Ring,ding,ding,dong", "Let's go crazy!", "Bing,bing,bing,bing, bong"])
+const phrases = ref([
+	"Get ready for the crazy frog!",
+	"Ring ding ding ding dingeringeding!",
+	"Wa-pa-pa pa-pa-pa-pow!",
+	"Hatee-hatee-hatee-ho!",
+	"Bom-bom-bom-bom!",
+	"Ba-da-ba-da-ba-da!",
+	"Ding,ding",
+	"Here we go!"])
 
 watch(volume, (newVolume) => {
 	audio.volume = newVolume;
@@ -30,11 +39,11 @@ watch(volume, (newVolume) => {
 	})
 
 const buttons = ref([
-	{ id: 1, img: "/annoying-volume/1.png", isClicked: false, x: Math.random() * (window.innerWidth - 100), y: Math.random() * (window.innerHeight - 50),
+	{ id: 1, img: "/annoying-volume/1.png", x: Math.random() * (window.innerWidth - 100), y: Math.random() * (window.innerHeight - 50),
 	},
-	{ id: 2, img: "/annoying-volume/2.png", isClicked: false, x: Math.random() * (window.innerWidth - 100), y: Math.random() * (window.innerHeight - 50),
+	{ id: 2, img: "/annoying-volume/2.png", x: Math.random() * (window.innerWidth - 100), y: Math.random() * (window.innerHeight - 50),
 	},
-	{ id: 3, img: "/annoying-volume/3.png", isClicked: false, x: Math.random() * (window.innerWidth - 100), y: Math.random() * (window.innerHeight - 50),
+	{ id: 3, img: "/annoying-volume/3.png", x: Math.random() * (window.innerWidth - 100), y: Math.random() * (window.innerHeight - 50),
 	},
 ]);
 
@@ -46,40 +55,35 @@ const sliderPosition = ref({
 });
 
 
-const handleButtonClick = (button) => {
-	if(activeButtonIndex.value < buttons.value.length - 1 ) {
+const handleButtonClick = () => {
+	if(activeButtonIndex.value < buttons.value.length) {
 		activeButtonIndex.value++;
 		counter.value++;
-		button.isClicked = true;
 		console.log(counter.value)
 	}
-	else{
-		if(counter.value === 2) {
-			console.log("Counter er 3, melding og reset skal trigges!");
-
+	else if(counter.value === 3){
+		
 			activeButtonIndex.value = -1;
-			button.isClicked = false;
 			message.value = "Du vant, nå kan du endre volum!";
 			isOpen.value = true;
 			audio.pause();
-				
+
 			setTimeout(() => {
-				console.log("Reset kjørt!");
 				isOpen.value = false;
 				message.value = "Eller ikke...";
 			}, 3000)
 			setTimeout(() => {
-			message.value = null;
-			activeButtonIndex.value = 0;
-			audio.play();
+				message.value = null;
+				activeButtonIndex.value = 0;
+				audio.play();
+				audio.playbackRate = 1.25;
 			}, 5000)
-		}
+	}
 		else {
 			activeButtonIndex.value = -1;
 			isOpen.value = true;
 			message.value = "Nå kan du faktisk endre volum!"
 		}
-	}
 };
 
 const randomizeSliderOnHover = () => {
@@ -89,7 +93,7 @@ const randomizeSliderOnHover = () => {
 			bottom: `${Math.random() * 300 - 250}px`,
 			left: `${Math.random() * 80 + 10}%`,
 			transform: 'translateX(-50%)',
-		};
+		}
 		
 			if(volume.value !== 1.0) {
 				sliderPosition.value = {
@@ -105,8 +109,7 @@ const randomizeSliderOnHover = () => {
 };
 
 const random_phrase = () => {
-	let random_num = Math.floor(Math.random() * phrases.value.length);
-	return phrases.value[random_num];
+	return phrases.value[Math.floor(Math.random() * phrases.value.length)];
 }
 
 
@@ -155,19 +158,21 @@ img{
 	height: 150px;
 	width: 150px;
 	border-radius: 75px;
-	animation: spin 3s linear infinite, glow 0.3s infinite;
+	animation: spin 2s linear infinite, glow 0.2s infinite;
 }
 
 @keyframes spin {
-	0%,100% {
-		transform: rotate(360deg);
-		animation : spin 1s linear infinite;
+	0% {
+		transform: rotate(0deg);
 	}
 		50%{
-			transform: rotate(0deg) scale(1.15);
+			transform: rotate(180deg) scale(1.15);
 		}
 	75%{
-		transform: rotate(-360deg) scale(1.3);
+		transform: rotate(-190deg) scale(1.3);
+	}
+	100% {
+		transform: rotate(360deg);
 	}
 }
 

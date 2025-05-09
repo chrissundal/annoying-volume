@@ -3,9 +3,7 @@ import Volumknapp from './components/Volumknapp.vue';
 import { ref } from 'vue';
 
 const play = ref(false);
-const start = () => {
-	play.value = true;
-}
+
 </script>
 
 <template>
@@ -13,7 +11,7 @@ const start = () => {
 		<Volumknapp />
 	</div>
 	<div v-else>
-		<button @click="start">Irriterende volumkontroller</button>
+		<button @click="play=!play">Irriterende volumkontroller</button>
 	</div>
 </template>
 
